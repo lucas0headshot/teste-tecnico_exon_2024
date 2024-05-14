@@ -14,7 +14,7 @@ class ConsultorController extends Controller
     {
         $consultores = Consultor::all();
 
-        return view('welcome', ['consultores' => $consultores]);
+        return view('consultores.index', ['consultores' => $consultores]);
     }
 
     /**

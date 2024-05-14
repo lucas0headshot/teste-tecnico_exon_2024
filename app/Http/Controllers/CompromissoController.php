@@ -14,7 +14,7 @@ class CompromissoController extends Controller
     {
         $compromissos = Compromisso::all();
 
-        return view('welcome', ['compromissos' => $compromissos]);
+        return view('compromissos.index', ['compromissos' => $compromissos]);
     }
 
     /**
