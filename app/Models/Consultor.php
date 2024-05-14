@@ -10,4 +10,6 @@ class Consultor extends Model
     use HasFactory;
 
     protected $fillable = ['nome', 'valor_hora'];
+
+    protected $table = 'consultores';
 }
