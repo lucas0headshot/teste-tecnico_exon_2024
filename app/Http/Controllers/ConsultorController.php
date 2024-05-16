@@ -4,13 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Consultor;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class ConsultorController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Retorna a view principal.
      */
-    public function index()
+    public function index(): View
     {
         $consultores = Consultor::all();
 
@@ -18,50 +20,80 @@ class ConsultorController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Retorna a view p/ criar um Consultor
      */
-    public function create()
+    public function create(): View
     {
-        //
+        return view('consultores.create');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Cria um Consultor.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        //
+        $validated = $request->validate([
+            'nome' => 'required|string|max:255',
+            'valor_hora' => 'required|min:0'
+        ]);
+
+        if ($validated) {
+            $created = Consultor::create($request->all());
+
+            if ($created) {
+                return to_route('consultores.index');
+            }
+        }
     }
 
     /**
-     * Display the specified resource.
+     * Retorna a view p/ visualizar um Consultor.
      */
-    public function show(string $id)
+    public function show(string $id_consultor): RedirectResponse
     {
-        //
+        $consultor = Consultor::findOrFail($id_consultor);
+
+        return to_route('consultores.index', ['consultor' => $consultor]);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Retorna a view p/ editar um Consultor.
      */
-    public function edit(string $id)
+    public function edit(int $id_consultor): View
     {
-        //
+        $consultor = Consultor::findOrFail($id_consultor);
+
+        return view('consultores.edit', ['consultor' => $consultor]);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Atualiza um Consultor.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, int $id_consultor): RedirectResponse
     {
-        //
+        $validated = $request->validate([
+            'nome' => 'required|string|max:255',
+            'valor_hora' => 'required|min:0'
+        ]);
+
+        if ($validated) {
+            $updated = Consultor::findOrFail($id_consultor)->updateOrFail($request->all());
+
+            if ($updated) {
+                return to_route('consultores.index');
+            }
+        }
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove um Consultor.
      */
-    public function destroy(string $id)
+    public function destroy(int $id_consultor): RedirectResponse
     {
-        //
+        $deleted = Consultor::findOrFail($id_consultor)->deleteOrFail();
+
+        if ($deleted) {
+            return to_route('consultores.index');
+        }
     }
 }
