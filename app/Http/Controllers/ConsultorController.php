@@ -24,7 +24,7 @@ class ConsultorController extends Controller
      */
     public function create(): View
     {
-        return view('consultores.create');
+        return view('consultores.create_edit');
     }
 
     /**
@@ -63,7 +63,7 @@ class ConsultorController extends Controller
     {
         $consultor = Consultor::findOrFail($id_consultor);
 
-        return view('consultores.edit', ['consultor' => $consultor]);
+        return view('consultores.create_edit', ['consultor' => $consultor]);
     }
 
     /**
