@@ -19,7 +19,7 @@
         </main>
 
         <footer>
-            <!-- TODO: add footer -->
+            @include('layouts.footer')
         </footer>
     </body>
 </html>
