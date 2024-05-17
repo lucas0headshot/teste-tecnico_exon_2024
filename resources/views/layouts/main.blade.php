@@ -6,10 +6,12 @@
         <meta name="author" content="Lucas">
 
         <title>@yield('title')</title>
+
+        @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     </head>
     <body>
         <header>
-            <!-- TODO: add header -->
+            @include('layouts.header')
         </header>
 
         <main>
