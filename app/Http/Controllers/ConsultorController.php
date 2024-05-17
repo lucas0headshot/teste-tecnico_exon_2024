@@ -4,23 +4,28 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Consultor;
-use Illuminate\Http\RedirectResponse;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 
 class ConsultorController extends Controller
 {
     /**
      * Retorna a view principal.
+     *
+     * @return View
      */
     public function index(): View
     {
         $consultores = Consultor::all();
 
-        return view('consultores.index', ['consultores' => $consultores]);
+        return view('consultores.index', compact('consultores'));
     }
 
     /**
      * Retorna a view p/ criar um Consultor
+     *
+     * @return View
      */
     public function create(): View
     {
@@ -29,31 +34,38 @@ class ConsultorController extends Controller
 
     /**
      * Cria um Consultor.
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): JsonResponse
     {
-        $validated = $request->validate([
-            'nome' => 'required|string|max:255',
+        $request->validate([
+            'nome' => 'required|string|max:255|unique:consultores',
             'valor_hora' => 'required|min:0'
         ]);
 
-        if ($validated) {
-            $created = Consultor::create($request->all());
-
-            if ($created) {
-                return to_route('consultores.index');
-            }
+        try {
+            Consultor::create($request->all());
+            return response()->json(['message' => 'Consultor criado com sucesso'], 201);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage(), 500]);
         }
     }
 
     /**
      * Retorna a view p/ visualizar um Consultor.
+     *
+     * @param
+     *
+     * @return View
      */
-    public function show(string $id_consultor): RedirectResponse
+    public function show(int $id_consultor): View
     {
         $consultor = Consultor::findOrFail($id_consultor);
 
-        return to_route('consultores.index', ['consultor' => $consultor]);
+        return view('consultores.index', ['consultor' => $consultor]);
     }
 
     /**
@@ -68,32 +80,43 @@ class ConsultorController extends Controller
 
     /**
      * Atualiza um Consultor.
+     *
+     * @param Request $request
+     * @param int $id_consultor
+     *
+     * @return JsonResponse
      */
-    public function update(Request $request, int $id_consultor): RedirectResponse
+    public function update(Request $request, int $id_consultor): JsonResponse
     {
-        $validated = $request->validate([
-            'nome' => 'required|string|max:255',
+        $request->validate([
+            'nome' => 'required|string|max:255|unique:consultores',
             'valor_hora' => 'required|min:0'
         ]);
 
-        if ($validated) {
-            $updated = Consultor::findOrFail($id_consultor)->updateOrFail($request->all());
-
-            if ($updated) {
-                return to_route('consultores.index');
-            }
+        try {
+            Consultor::findOrFail($id_consultor)->updateOrFail($request->all());
+            return response()->json(['message' => 'Consultor editado com sucesso'], 201);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
     /**
      * Remove um Consultor.
+     *
+     * @param int $id_consultor
+     *
+     * @return JsonResponse
      */
-    public function destroy(int $id_consultor): RedirectResponse
+    public function destroy(int $id_consultor): JsonResponse
     {
-        $deleted = Consultor::findOrFail($id_consultor)->deleteOrFail();
+        try {
+            //TODO: verificar vínculo compromisso
+            Consultor::findOrFail($id_consultor)->deleteOrFail();
 
-        if ($deleted) {
-            return to_route('consultores.index');
+            return response()->json(['message' => 'Consultor removido com sucesso'], 204);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 }
