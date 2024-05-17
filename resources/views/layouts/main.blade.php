@@ -16,7 +16,7 @@
             @include('layouts.header')
         </header>
 
-        <main>
+        <main class="container mt-3 mb-3">
             @yield('content')
         </main>
 

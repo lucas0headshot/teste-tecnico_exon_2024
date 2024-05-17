@@ -1,5 +1,5 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary d-flex justify-content-space-between">
-    <div class="container-fluid">
+<nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
+    <div class="container-fluid d-flex justify-content-space-between">
         <a class="navbar-brand" href="#">
             <img src="/img/logo.png" alt="Logo" width="30" height="24">
         </a>
