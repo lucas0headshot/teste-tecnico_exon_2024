@@ -4,6 +4,8 @@ use App\Http\Controllers\CompromissoController;
 use App\Http\Controllers\ConsultorController;
 use Illuminate\Support\Facades\Route;
 
+Route::redirect('/', 'compromissos');
+
 Route::resource('consultores', ConsultorController::class)->names([
     'index' => 'consultores.index',
     'create' => 'consultores.create',
