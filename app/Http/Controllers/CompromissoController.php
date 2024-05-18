@@ -61,9 +61,9 @@ class CompromissoController extends Controller
     {
         try {
             Compromisso::create($request->validated());
-            return redirect('compromissos.index')->with('success', 'Compromisso criado com sucesso');
+            return redirect()->route('compromissos.index')->with('success', 'Compromisso criado com sucesso');
         } catch (Exception $e) {
-            return redirect('compromissos.create')->withException($e)->withInput();
+            return redirect()->route('compromissos.create')->withException($e)->withInput();
         }
     }
 
@@ -108,9 +108,9 @@ class CompromissoController extends Controller
     {
         try {
             Compromisso::findOrFail($compromisso)->updateOrFail($request->validated());
-            return redirect('compromissos.index')->with('success', 'Compromisso editado com sucesso');
+            return redirect()->route('compromissos.index')->with('success', 'Compromisso editado com sucesso');
         } catch (Exception $e) {
-            return redirect('compromissos.create')->withException($e)->withInput();
+            return redirect()->route('compromissos.edit')->withException($e)->withInput();
         }
     }
 
@@ -125,9 +125,9 @@ class CompromissoController extends Controller
     {
         try {
             Compromisso::findOrFail($compromisso)->deleteOrFail();
-            return redirect('compromissos.index')->with('success', 'Compromisso removido com sucesso');
+            return redirect()->route('compromissos.index')->with('success', 'Compromisso removido com sucesso');
         } catch (Exception $e) {
-            return redirect('compromissos.index')->withException($e)->withInput();
+            return redirect()->route('compromissos.index')->withException($e)->withInput();
         }
     }
 }
