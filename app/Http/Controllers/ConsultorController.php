@@ -23,7 +23,18 @@ class ConsultorController extends Controller
     public function index(Request $request): View | JsonResponse
     {
         if ($request->ajax()) {
-            $data = Consultor::latest()->get();
+            $query = Consultor::query();
+
+            if ($request->filled('nome')) {
+                $query->where('nome', 'LIKE', "%{$request->nome}%");
+            }
+
+            if ($request->filled("valor_hora")) {
+                $query->where('valor_hora', '=', $request->valor_hora);
+            }
+
+            $data = $query->get();
+
             return DataTables::of($data)
                 ->addColumn('acao', function ($row) {
                     $rota_editar = route('consultores.edit', $row->id);

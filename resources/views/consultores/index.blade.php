@@ -6,8 +6,6 @@
     <h1>Consultores</h1>
 
     <div class="mt-5">
-        <a class="btn btn-success" href="{{ route('consultores.create') }}">Cadastrar</a>
-
         @if(session('success'))
             <div class="alert alert-success mt-3" id="mensagemSucesso">
                 {{ session('success') }}
@@ -32,16 +30,42 @@
             </script>
         @endif
 
-        <table id="consultores-list" class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Nome</th>
-                    <th>Valor Hora</th>
-                    <th>Ação</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+        <div class="card">
+            <div class="card-header bg-body">
+                <h3>Filtros</h3>
+            </div>
+
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="nome" class="form-label">Nome</label>
+                    <input type="text" id="nome" class="form-control" placeholder="Digite um nome" name="nome">
+                </div>
+                <div class="form-group mt-2">
+                    <label for="valor_hora" class="form-label">Valor da hora</label>
+                    <input type="number" min="0" id="valor_hora" class="form-control" placeholder="Digite o valor da hora" name="valor_hora">
+                </div>
+            </div>
+
+            <div class="card-footer bg-body text-end border-0">
+                <button type="button" class="btn btn-primary" id="btnFiltrar">Filtrar</button>
+                <button type="button" class="btn btn-secondary" id="btnLimpar">Limpar Filtros</button>
+            </div>
+        </div>
+
+        <section class="mt-4">
+            <a class="btn btn-success" href="{{ route('consultores.create') }}">Cadastrar</a>
+
+            <table id="consultores-list" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Valor Hora</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </section>
     </div>
 
     <script type="module">
@@ -49,7 +73,13 @@
             const table = $('#consultores-list').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('consultores.index') }}",
+                ajax: {
+                    url: "{{ route('consultores.index') }}",
+                    data: function(data) {
+                        data.nome = $('#nome').val();
+                        data.valor_hora = $('#valor_hora').val();
+                    }
+                },
                 columns: [
                     {data: 'nome', name: 'nome'},
                     {data: 'valor_hora', name: 'valor_hora'},
@@ -66,6 +96,16 @@
                 language: {
                     url: '/json/DataTables/pt-BR.json',
                 },
+            });
+
+            $('#btnFiltrar').on('click', function() {
+                table.draw();
+            });
+
+            $('#btnLimpar').on('click', function() {
+                $('#nome').val('');
+                $('#valor_hora').val('');
+                table.draw();
             });
         });
     </script>
