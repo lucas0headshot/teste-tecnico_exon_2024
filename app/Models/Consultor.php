@@ -13,4 +13,10 @@ class Consultor extends Model
     protected $fillable = ['nome', 'valor_hora'];
 
     protected $table = 'consultores';
+
+
+    public function hasCompromisso(): bool
+    {
+        return Compromisso::select('id')->where('id_consultor', $this->id)->exists();
+    }
 }
