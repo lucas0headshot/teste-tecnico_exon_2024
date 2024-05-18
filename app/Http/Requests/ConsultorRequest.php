@@ -35,7 +35,7 @@ class ConsultorRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('consultores')->ignore($id_consultor),
+                Rule::unique('consultores')->ignore($id_consultor)->withoutTrashed(),
             ],
             'valor_hora' => 'required|numeric|min:0'
         ];
