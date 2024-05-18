@@ -2,24 +2,40 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ConsultorRequest;
 use Illuminate\Http\Request;
 use App\Models\Consultor;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Yajra\DataTables\DataTables;
 
 class ConsultorController extends Controller
 {
     /**
      * Retorna a view principal.
      *
-     * @return View
+     * @param Request $request
+     *
+     * @return View | JsonResponse
      */
-    public function index(): View
+    public function index(Request $request): View | JsonResponse
     {
-        $consultores = Consultor::all();
+        if ($request->ajax()) {
+            $data = Consultor::latest()->get();
+            return DataTables::of($data)
+                ->addColumn('acao', function ($row) {
+                    $rota_editar = route('consultores.edit', $row->id);
+                    $rota_excluir = route('consultores.destroy', $row->id);
+                    return '<a href="' . $rota_editar . '" class="edit btn btn-warning btn-sm">Editar</a>
+                            <a href="' . $rota_excluir . '" class="delete btn btn-danger btn-sm">Remover</a>';
+                })
+                ->rawColumns(['acao'])
+                ->make(true);
+        }
 
-        return view('consultores.index', compact('consultores'));
+        return view('consultores.index');
     }
 
     /**
@@ -35,22 +51,17 @@ class ConsultorController extends Controller
     /**
      * Cria um Consultor.
      *
-     * @param Request $request
+     * @param ConsultorRequest $request
      *
-     * @return JsonResponse
+     * @return RedirectResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(ConsultorRequest $request): RedirectResponse
     {
-        $request->validate([
-            'nome' => 'required|string|max:255|unique:consultores',
-            'valor_hora' => 'required|min:0'
-        ]);
-
         try {
-            Consultor::create($request->all());
-            return response()->json(['message' => 'Consultor criado com sucesso'], 201);
+            Consultor::create($request->validated());
+            return redirect('consultores.index')->with('success', 'Consultor criado com sucesso');
         } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage(), 500]);
+            return redirect('consultores.create')->withException($e)->withInput();
         }
     }
 
@@ -61,19 +72,23 @@ class ConsultorController extends Controller
      *
      * @return View
      */
-    public function show(int $id_consultor): View
+    public function show(Consultor $consultor): View
     {
-        $consultor = Consultor::findOrFail($id_consultor);
+        $consultor = Consultor::findOrFail($consultor);
 
         return view('consultores.index', ['consultor' => $consultor]);
     }
 
     /**
      * Retorna a view p/ editar um Consultor.
+     *
+     * @param Consultor $consultor
+     *
+     * @return View
      */
-    public function edit(int $id_consultor): View
+    public function edit(Consultor $consultor): View
     {
-        $consultor = Consultor::findOrFail($id_consultor);
+        $consultor = Consultor::findOrFail($consultor);
 
         return view('consultores.create_edit', ['consultor' => $consultor]);
     }
@@ -81,42 +96,36 @@ class ConsultorController extends Controller
     /**
      * Atualiza um Consultor.
      *
-     * @param Request $request
-     * @param int $id_consultor
+     * @param ConsultorRequest $request
+     * @param Consultor $consultor
      *
-     * @return JsonResponse
+     * @return RedirectResponse
      */
-    public function update(Request $request, int $id_consultor): JsonResponse
+    public function update(ConsultorRequest $request, Consultor $consultor): RedirectResponse
     {
-        $request->validate([
-            'nome' => 'required|string|max:255|unique:consultores',
-            'valor_hora' => 'required|min:0'
-        ]);
-
         try {
-            Consultor::findOrFail($id_consultor)->updateOrFail($request->all());
-            return response()->json(['message' => 'Consultor editado com sucesso'], 201);
+            Consultor::findOrFail($consultor)->updateOrFail($request->validated());
+            return redirect('consultores.index')->with('success', 'Consultor criado com sucesso');
         } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return redirect('consultores.create')->withException($e)->withInput();
         }
     }
 
     /**
      * Remove um Consultor.
      *
-     * @param int $id_consultor
+     * @param Consultor $consultor
      *
-     * @return JsonResponse
+     * @return RedirectResponse
      */
-    public function destroy(int $id_consultor): JsonResponse
+    public function destroy(Consultor $consultor): RedirectResponse
     {
         try {
             //TODO: verificar vínculo compromisso
-            Consultor::findOrFail($id_consultor)->deleteOrFail();
-
-            return response()->json(['message' => 'Consultor removido com sucesso'], 204);
+            Consultor::findOrFail($consultor)->deleteOrFail();
+            return redirect('consultores.index')->with('success', 'Consultor removido com sucesso');
         } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return redirect('consultores.index')->withException($e)->withInput();
         }
     }
 }
