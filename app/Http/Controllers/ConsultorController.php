@@ -68,28 +68,26 @@ class ConsultorController extends Controller
     /**
      * Retorna a view p/ visualizar um Consultor.
      *
-     * @param
+     * @param int $id_consultor
      *
      * @return View
      */
-    public function show(Consultor $consultor): View
+    public function show(int $id_consultor): View
     {
-        $consultor = Consultor::findOrFail($consultor);
-
+        $consultor = Consultor::findOrFail($id_consultor);
         return view('consultores.index', ['consultor' => $consultor]);
     }
 
     /**
      * Retorna a view p/ editar um Consultor.
      *
-     * @param Consultor $consultor
+     * @param int $consultor
      *
      * @return View
      */
-    public function edit(Consultor $consultor): View
+    public function edit(int $id_consultor): View
     {
-        $consultor = Consultor::findOrFail($consultor);
-
+        $consultor = Consultor::findOrFail($id_consultor);
         return view('consultores.create_edit', ['consultor' => $consultor]);
     }
 
@@ -97,14 +95,14 @@ class ConsultorController extends Controller
      * Atualiza um Consultor.
      *
      * @param ConsultorRequest $request
-     * @param Consultor $consultor
+     * @param int $id_consultor
      *
      * @return RedirectResponse
      */
-    public function update(ConsultorRequest $request, Consultor $consultor): RedirectResponse
+    public function update(ConsultorRequest $request, int $id_consultor): RedirectResponse
     {
         try {
-            Consultor::findOrFail($consultor)->updateOrFail($request->validated());
+            Consultor::findOrFail($id_consultor)->updateOrFail($request->validated());
             return redirect()->route('consultores.index')->with('success', 'Consultor criado com sucesso');
         } catch (Exception $e) {
             return redirect()->route('consultores.create')->withException($e)->withInput();
@@ -114,15 +112,17 @@ class ConsultorController extends Controller
     /**
      * Remove um Consultor.
      *
-     * @param Consultor $consultor
+     * @param int $id_consultor
      *
      * @return RedirectResponse
      */
-    public function destroy(Consultor $consultor): RedirectResponse
+    public function destroy(int $id_consultor): RedirectResponse
     {
         try {
+            $consultor = Consultor::findOrFail($id_consultor);
+
             if (!$consultor->hasCompromisso()) {
-                return redirect()->route('consultores.index')->withErrors(['error' => 'Consultor possui compromisso, não pode ser removido.']);
+                return redirect()->route('consultores.index')->with('error', 'Consultor possui compromisso, não pode ser removido.');
             }
 
             $consultor->deleteOrFail();
