@@ -28,8 +28,12 @@ class ConsultorController extends Controller
                 ->addColumn('acao', function ($row) {
                     $rota_editar = route('consultores.edit', $row->id);
                     $rota_excluir = route('consultores.destroy', $row->id);
-                    return '<a href="' . $rota_editar . '" class="edit btn btn-warning btn-sm">Editar</a>
-                            <a href="' . $rota_excluir . '" class="delete btn btn-danger btn-sm">Remover</a>';
+                    return '<a href="' . $rota_editar . '" class="edit btn btn-warning btn-sm">Editar</a>' .
+                        '<form action="' . $rota_excluir . '" method="POST" style="display: inline;" class="ms-2">' .
+                        csrf_field() .
+                        method_field('DELETE') .
+                        '<button type="submit" class="delete btn btn-danger btn-sm">Remover</button>' .
+                        '</form>';
                 })
                 ->rawColumns(['acao'])
                 ->make(true);
