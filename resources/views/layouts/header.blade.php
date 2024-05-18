@@ -11,10 +11,10 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{{ route('consultores.index') }}">Consultores</a>
+                    <a class="nav-link {{ Route::is('consultores*') ? 'active' : '' }}" aria-current="page" href="{{ route('consultores.index') }}">Consultores</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="{{ route('compromissos.index') }}">Compromissos</a>
+                    <a class="nav-link {{ Route::is('compromissos*') ? 'active' : '' }}" aria-current="page" href="{{ route('compromissos.index') }}">Compromissos</a>
                 </li>
             </ul>
         </div>
