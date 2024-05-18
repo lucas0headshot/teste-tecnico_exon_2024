@@ -125,7 +125,7 @@ class ConsultorController extends Controller
         try {
             $consultor = Consultor::findOrFail($id_consultor);
 
-            if (!$consultor->hasCompromisso()) {
+            if ($consultor->hasCompromisso()) {
                 return redirect()->route('consultores.index')->with('error', 'Consultor possui compromisso, não pode ser removido.');
             }
 
