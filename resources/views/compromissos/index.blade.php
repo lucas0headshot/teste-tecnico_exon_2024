@@ -119,6 +119,14 @@
                 language: {
                     url: '/json/DataTables/pt-BR.json',
                 },
+
+                drawCallback: function(settings) {
+                    const api = this.api();
+                    const json = api.ajax.json();
+
+                    $('#compromissos-list tfoot td:eq(0)').html('Total');
+                    $('#compromissos-list tfoot td:eq(1)').html(`${json.total_horas} - ${json.total_valor}`);
+                }
             });
 
 
