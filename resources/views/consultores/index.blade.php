@@ -8,6 +8,18 @@
     <div class="mt-5">
         <a class="btn btn-success" href="{{ route('consultores.create') }}">Cadastrar</a>
 
+        @if(session('success'))
+            <div class="alert alert-success mt-3" id="mensagemSucesso">
+                {{ session('success') }}
+            </div>
+
+            <script type="module">
+                setTimeout(() => {
+                    $('#mensagemSucesso').remove();
+                }, 3000);
+            </script>
+        @endif
+
         <table id="consultores-list" class="table table-bordered">
             <thead>
                 <tr>
