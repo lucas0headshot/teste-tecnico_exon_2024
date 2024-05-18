@@ -34,7 +34,7 @@ class CompromissoRequest extends FormRequest
                 'integer',
                 Rule::exists('consultores', 'id'),
             ],
-            'data' => 'required|date|after:now|date_format:d-m-Y',
+            'data' => 'required|date|after:now|date_format:Y-m-d',
             'hora_inicio' => 'required|date_format:H:i',
             'hora_fim' => 'required|after:hora_inicio|date_format:H:i',
             'intervalo' => 'required|date_format:H:i',
