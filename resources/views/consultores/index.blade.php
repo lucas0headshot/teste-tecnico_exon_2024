@@ -3,12 +3,10 @@
 @section('title', 'Consultores')
 
 @section('content')
-    @include('consultores.create_edit')
+    <h1>Consultores</h1>
 
-    <div>
-        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#consultorModal">
-            Cadastrar
-        </button>
+    <div class="mt-5">
+        <a class="btn btn-success" href="{{ route('consultores.create') }}">Cadastrar</a>
 
         <table id="consultores-list" class="table table-bordered">
             <thead>
@@ -18,8 +16,7 @@
                     <th>Ação</th>
                 </tr>
             </thead>
-            <tbody>
-            </tbody>
+            <tbody></tbody>
         </table>
     </div>
 
@@ -34,14 +31,13 @@
                     {data: 'valor_hora', name: 'valor_hora'},
                     {
                         data: 'acao',
-                        name: 'acao',
-                        orderable: true,
-                        searchable: true
+                        orderable: false,
+                        searchable: false
                     }
                 ],
 
                 responsive: true,
-                colReorder: true,
+                //FIXME: colReorder: true,
 
                 language: {
                     url: '/json/DataTables/pt-BR.json',
