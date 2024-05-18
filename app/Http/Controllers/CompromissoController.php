@@ -2,35 +2,40 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\CompromissoRequest;
+use App\Http\Requests\ConsultorRequest;
 use App\Models\Compromisso;
 use App\Models\Consultor;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Yajra\DataTables\DataTables;
 
 class CompromissoController extends Controller
 {
     /**
      * Retorna a view principal.
      *
-     * @return View
+     * @return View | JsonResponse
      */
-    public function index(): View
+    public function index(Request $request): View | JsonResponse
     {
-        $compromissos = Compromisso::all();
-        foreach($compromissos as $compromisso) {
-            $total_horas = (strtotime($compromisso->hora_inicio) - strtotime($compromisso->hora_fim)) - strtotime($compromisso->intervalo);
-
-            $consultor = Consultor::findOrFail($compromisso->id_consultor);
-            $valor_total = $consultor->valor_hora * $total_horas;
-            $nome_consultor = $consultor->nome;
-
-            $compromisso->total_horas = $total_horas;
-            $compromisso->valor_total = $valor_total;
-            $compromisso->nome_consultor = $nome_consultor;
+        if ($request->ajax()) {
+            $data = Consultor::latest()->get();
+            return DataTables::of($data)
+                ->addColumn('acao', function ($row) {
+                    $rota_editar = route('compromissos.edit', $row->id);
+                    $rota_excluir = route('compromissos.destroy', $row->id);
+                    return '<a href="' . $rota_editar . '" class="edit btn btn-warning btn-sm">Editar</a>
+                            <a href="' . $rota_excluir . '" class="delete btn btn-danger btn-sm">Remover</a>';
+                })
+                ->rawColumns(['acao'])
+                ->make(true);
         }
 
-        return view('compromissos.index', ['compromissos' => $compromissos]);
+        return view('compromissos.index');
     }
 
     /**
@@ -40,59 +45,53 @@ class CompromissoController extends Controller
      */
     public function create(): View
     {
-        return view('compromissos.create_edit');
+        $consultores = Consultor::all();
+
+        return view('compromissos.create_edit', ['consultores' => $consultores]);
     }
 
     /**
      * Cria um Compromisso.
      *
-     * @param Request $request
+     * @param CompromissoRequest $request
      *
      * @return RedirectResponse
      */
-    public function store(Request $request): RedirectResponse
+    public function store(CompromissoRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'id_consultor' => 'required|integer',
-            'data' => 'required|date|after:now|date_format:d-m-Y',
-            'hora_inicio' => 'required|date_format:H:i',
-            'hora_fim' => 'required|after:hora_inicio|date_format:H:i',
-            'intervalo' => 'required|date_format:H:i'
-        ]);
-
-        if ($validated) {
-            $created = Compromisso::create($request->all());
-
-            if ($created) {
-                return to_route('compromissos.index');
-            }
+        try {
+            Compromisso::create($request->validated());
+            return redirect('compromissos.index')->with('success', 'Compromisso criado com sucesso');
+        } catch (Exception $e) {
+            return redirect('compromissos.create')->withException($e)->withInput();
         }
     }
 
     /**
      * Retorna a view p/ visualizar um Compromisso.
      *
-     * @param int $id_compromisso
+     * @param Compromisso $compromisso
      *
      * @return View
      */
-    public function show(int $id_compromisso): View
+    public function show(Compromisso $compromisso): View
     {
-        $compromisso = Compromisso::findOrFail($id_compromisso);
+        $compromisso = Compromisso::findOrFail($compromisso);
+        $consultores = Consultor::all();
 
-        return view('compromissos.show', ['compromisso' => $compromisso]);
+        return view('compromissos.show', ['compromisso' => $compromisso, 'consultores' => $consultores]);
     }
 
     /**
      * Retorna a view p/ editar um Compromisso.
      *
-     * @param int $id_compromisso
+     * @param Compromisso $compromisso
      *
      * @return View
      */
-    public function edit(int $id_compromisso): View
+    public function edit(Compromisso $compromisso): View
     {
-        $compromisso = Compromisso::findOrFail($id_compromisso);
+        $compromisso = Compromisso::findOrFail($compromisso);
 
         return view('compromissos.create_edit', ['compromisso' => $compromisso]);
     }
@@ -100,43 +99,35 @@ class CompromissoController extends Controller
     /**
      * Atualiza um compromisso.
      *
-     * @param Request $request
-     * @param int $id_compromisso
+     * @param ConsultorRequest $request
+     * @param Compromisso $compromisso
      *
      * @return RedirectResponse
      */
-    public function update(Request $request, int $id_compromisso): RedirectResponse
+    public function update(ConsultorRequest $request, Compromisso $compromisso): RedirectResponse
     {
-        $validated = $request->validate([
-            'id_consultor' => 'required|integer',
-            'data' => 'required|date|after:now|date_format:d-m-Y',
-            'hora_inicio' => 'required|date_format:H:i',
-            'hora_fim' => 'required|after:hora_inicio|date_format:H:i',
-            'intervalo' => 'required|date_format:H:i'
-        ]);
-
-        if ($validated) {
-            $updated = Compromisso::findOrFail($id_compromisso)->updateOrFail($request->all());
-
-            if ($updated) {
-                return to_route('compromissos.index');
-            }
+        try {
+            Compromisso::findOrFail($compromisso)->updateOrFail($request->validated());
+            return redirect('compromissos.index')->with('success', 'Compromisso editado com sucesso');
+        } catch (Exception $e) {
+            return redirect('compromissos.create')->withException($e)->withInput();
         }
     }
 
     /**
      * Remove um Compromisso.
      *
-     * @param int $id_compromisso
+     * @param Compromisso $Compromisso
      *
      * @return RedirectResponse
      */
-    public function destroy(int $id_compromisso): RedirectResponse
+    public function destroy(Compromisso $compromisso): RedirectResponse
     {
-        $deleted = Compromisso::findOrFail($id_compromisso)->deleteOrFail();
-
-        if ($deleted) {
-            return to_route('compromissos.index');
+        try {
+            Compromisso::findOrFail($compromisso)->deleteOrFail();
+            return redirect('compromissos.index')->with('success', 'Compromisso removido com sucesso');
+        } catch (Exception $e) {
+            return redirect('compromissos.index')->withException($e)->withInput();
         }
     }
 }
