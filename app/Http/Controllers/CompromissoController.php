@@ -6,6 +6,7 @@ use App\Http\Requests\CompromissoRequest;
 use App\Http\Requests\ConsultorRequest;
 use App\Models\Compromisso;
 use App\Models\Consultor;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -23,19 +24,42 @@ class CompromissoController extends Controller
     public function index(Request $request): View | JsonResponse
     {
         if ($request->ajax()) {
-            $data = Consultor::latest()->get();
+            $data = Compromisso::latest()->get();
             return DataTables::of($data)
+                ->addColumn('data', function ($row) {
+                    return Carbon::parse($row->data)->format('d/m/Y');
+                })
+                ->addColumn('consultor', function ($row) {
+                    return $row->consultor->nome;
+                })
+                ->addColumn('horarios', function ($row) {
+                    return $row->hora_inicio . ' - ' . $row->hora_fim;
+                })
+                ->addColumn('intervalo', function ($row) {
+                    return $row->intervalo;
+                })
+                ->addColumn('total_horas', function ($row) {
+                    return gmdate('H:i', Compromisso::findOrFail($row->id)->calcularTotalHoras() * 60);
+                })
+                ->addColumn('valor_total', function ($row) {
+                    return 'R$ ' . number_format(Compromisso::findOrFail($row->id)->calcularValorTotal(), 2, ',', '.');
+                })
                 ->addColumn('acao', function ($row) {
                     $rota_editar = route('compromissos.edit', $row->id);
                     $rota_excluir = route('compromissos.destroy', $row->id);
-                    return '<a href="' . $rota_editar . '" class="edit btn btn-warning btn-sm">Editar</a>
-                            <a href="' . $rota_excluir . '" class="delete btn btn-danger btn-sm">Remover</a>';
+                    return '<a href="' . $rota_editar . '" class="edit btn btn-warning btn-sm">Editar</a>' .
+                        '<form action="' . $rota_excluir . '" method="POST" style="display: inline;" class="ms-2">' .
+                        csrf_field() .
+                        method_field('DELETE') .
+                        '<button type="submit" onClick="return confirm(\'Deseja realmente remover este compromisso?\')" class="delete btn btn-danger btn-sm">Remover</button>' .
+                        '</form>';
                 })
                 ->rawColumns(['acao'])
                 ->make(true);
         }
 
-        return view('compromissos.index');
+        $consultores = Consultor::allOnlyIDAndName();
+        return view('compromissos.index', compact('consultores'));
     }
 
     /**
@@ -45,7 +69,7 @@ class CompromissoController extends Controller
      */
     public function create(): View
     {
-        $consultores = Consultor::all();
+        $consultores = Consultor::allOnlyIDAndName();
 
         return view('compromissos.create_edit', ['consultores' => $consultores]);
     }
@@ -70,13 +94,13 @@ class CompromissoController extends Controller
     /**
      * Retorna a view p/ visualizar um Compromisso.
      *
-     * @param Compromisso $compromisso
+     * @param int $id_compromisso
      *
      * @return View
      */
-    public function show(Compromisso $compromisso): View
+    public function show(int $id_compromisso): View
     {
-        $compromisso = Compromisso::findOrFail($compromisso);
+        $compromisso = Compromisso::findOrFail($id_compromisso);
         $consultores = Consultor::all();
 
         return view('compromissos.show', ['compromisso' => $compromisso, 'consultores' => $consultores]);
@@ -85,46 +109,47 @@ class CompromissoController extends Controller
     /**
      * Retorna a view p/ editar um Compromisso.
      *
-     * @param Compromisso $compromisso
+     * @param int $id_compromisso
      *
      * @return View
      */
-    public function edit(Compromisso $compromisso): View
+    public function edit(int $id_compromisso): View
     {
-        $compromisso = Compromisso::findOrFail($compromisso);
+        $compromisso = Compromisso::findOrFail($id_compromisso);
+        $consultores = Consultor::allOnlyIDAndName();
 
-        return view('compromissos.create_edit', ['compromisso' => $compromisso]);
+        return view('compromissos.create_edit', ['compromisso' => $compromisso, 'consultores' => $consultores]);
     }
 
     /**
      * Atualiza um compromisso.
      *
      * @param ConsultorRequest $request
-     * @param Compromisso $compromisso
+     * @param int $id_compromisso
      *
      * @return RedirectResponse
      */
-    public function update(ConsultorRequest $request, Compromisso $compromisso): RedirectResponse
+    public function update(ConsultorRequest $request, int $id_compromisso): RedirectResponse
     {
         try {
-            Compromisso::findOrFail($compromisso)->updateOrFail($request->validated());
+            Compromisso::findOrFail($id_compromisso)->updateOrFail($request->validated());
             return redirect()->route('compromissos.index')->with('success', 'Compromisso editado com sucesso');
         } catch (Exception $e) {
-            return redirect()->route('compromissos.edit')->withException($e)->withInput();
+            return redirect()->route('compromissos.edit')->with('erro', $e->getMessage())->withInput();
         }
     }
 
     /**
      * Remove um Compromisso.
      *
-     * @param Compromisso $Compromisso
+     * @param int $id_compromisso
      *
      * @return RedirectResponse
      */
-    public function destroy(Compromisso $compromisso): RedirectResponse
+    public function destroy(int $id_compromisso): RedirectResponse
     {
         try {
-            Compromisso::findOrFail($compromisso)->deleteOrFail();
+            Compromisso::findOrFail($id_compromisso)->deleteOrFail();
             return redirect()->route('compromissos.index')->with('success', 'Compromisso removido com sucesso');
         } catch (Exception $e) {
             return redirect()->route('compromissos.index')->withException($e)->withInput();
