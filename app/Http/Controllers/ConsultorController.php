@@ -36,6 +36,9 @@ class ConsultorController extends Controller
             $data = $query->get();
 
             return DataTables::of($data)
+                ->addColumn('valor_hora', function ($row) {
+                    return 'R$ ' . number_format($row->valor_hora, 2, ',', '.');
+                })
                 ->addColumn('acao', function ($row) {
                     $rota_editar = route('consultores.edit', $row->id);
                     $rota_excluir = route('consultores.destroy', $row->id);
