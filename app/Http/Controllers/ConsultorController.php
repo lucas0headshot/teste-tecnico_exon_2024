@@ -121,11 +121,14 @@ class ConsultorController extends Controller
     public function destroy(Consultor $consultor): RedirectResponse
     {
         try {
-            //TODO: verificar vínculo compromisso
-            Consultor::findOrFail($consultor)->deleteOrFail();
+            if (!$consultor->hasCompromisso()) {
+                return redirect()->route('consultores.index')->withErrors(['error' => 'Consultor possui compromisso, não pode ser removido.']);
+            }
+
+            $consultor->deleteOrFail();
             return redirect()->route('consultores.index')->with('success', 'Consultor removido com sucesso');
         } catch (Exception $e) {
-            return redirect()->route('consultores.index')->withException($e)->withInput();
+            return redirect()->route('consultores.index')->withException($e);
         }
     }
 }
