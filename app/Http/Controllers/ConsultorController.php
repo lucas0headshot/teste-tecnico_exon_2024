@@ -32,7 +32,7 @@ class ConsultorController extends Controller
                         '<form action="' . $rota_excluir . '" method="POST" style="display: inline;" class="ms-2">' .
                         csrf_field() .
                         method_field('DELETE') .
-                        '<button type="submit" class="delete btn btn-danger btn-sm">Remover</button>' .
+                        '<button type="submit" onClick="return confirm(\'Deseja realmente remover este consultor?\')" class="delete btn btn-danger btn-sm">Remover</button>' .
                         '</form>';
                 })
                 ->rawColumns(['acao'])
