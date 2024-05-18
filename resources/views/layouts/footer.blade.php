@@ -1,6 +1,6 @@
 <div class="container-fluid">
-    <div class="row align-items-center">
-        <div class="col-md-8">
+    <div class="row align-items-center justify-content-between">
+        <div class="col-auto">
             <ul class="nav">
                 <li class="nav-item">
                     <a class="nav-link {{ Route::is('consultores*') ? 'active' : '' }}" aria-current="page" href="{{ route('consultores.index') }}">Consultores</a>
@@ -10,7 +10,7 @@
                 </li>
             </ul>
         </div>
-        <div class="col-md-4">
+        <div class="col-auto">
             <h3>Exon Sistemas e Consultoria</h3>
         </div>
     </div>
