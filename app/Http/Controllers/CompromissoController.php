@@ -38,6 +38,14 @@ class CompromissoController extends Controller
 
             $data = $query->get();
 
+            $totalHoras = $data->reduce(function ($carry, $item) {
+                return $carry + Compromisso::findOrFail($item->id)->calcularTotalHoras();
+            }, 0);
+
+            $totalValor = $data->reduce(function ($carry, $item) {
+                return $carry + Compromisso::findOrFail($item->id)->calcularValorTotal();
+            }, 0);
+
             return DataTables::of($data)
                 ->addColumn('data', function ($row) {
                     return Carbon::parse($row->data)->format('d/m/Y');
@@ -68,6 +76,10 @@ class CompromissoController extends Controller
                         '</form>';
                 })
                 ->rawColumns(['acao'])
+                ->with([
+                    'total_horas' => gmdate('H:i', $totalHoras * 60),
+                    'total_valor' => 'R$ ' . number_format($totalValor, 2, ',', '.')
+                ])
                 ->make(true);
         }
 
