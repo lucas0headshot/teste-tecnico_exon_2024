@@ -24,7 +24,20 @@ class CompromissoController extends Controller
     public function index(Request $request): View | JsonResponse
     {
         if ($request->ajax()) {
-            $data = Compromisso::latest()->get();
+            $query = Compromisso::with('consultor')->latest();
+
+            if ($request->filled('data_inicio')) {
+                $query->whereDate('data', '>=', Carbon::parse($request->data_inicio)->toDateString());
+            }
+            if ($request->filled('data_fim')) {
+                $query->whereDate('data', '<=', Carbon::parse($request->data_fim)->toDateString());
+            }
+            if ($request->filled('id_consultor')) {
+                $query->where('id_consultor', $request->id_consultor);
+            }
+
+            $data = $query->get();
+
             return DataTables::of($data)
                 ->addColumn('data', function ($row) {
                     return Carbon::parse($row->data)->format('d/m/Y');
