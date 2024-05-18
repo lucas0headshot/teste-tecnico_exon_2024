@@ -11,4 +11,10 @@ class Compromisso extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = ['id_consultor', 'data', 'hora_inicio', 'hora_fim', 'intervalo'];
+
+
+    public function consultor()
+    {
+        return $this->belongsTo(Consultor::class, 'id_consultor');
+    }
 }
