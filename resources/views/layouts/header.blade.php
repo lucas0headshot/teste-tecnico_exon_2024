@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
     <div class="container-fluid d-flex justify-content-space-between">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="{{ route('compromissos.index') }}">
             <img src="/img/logo.png" alt="Logo" width="30" height="24">
         </a>
 
