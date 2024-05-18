@@ -20,6 +20,18 @@
             </script>
         @endif
 
+        @if(session('error'))
+            <div class="alert alert-danger mt-3" id="mensagemErro">
+                {{ session('error') }}
+            </div>
+
+            <script type="module">
+                setTimeout(() => {
+                    $('#mensagemErro').remove();
+                }, 3000);
+            </script>
+        @endif
+
         <table id="consultores-list" class="table table-bordered">
             <thead>
                 <tr>

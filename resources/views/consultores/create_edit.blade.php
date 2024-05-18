@@ -12,7 +12,7 @@
     <div class="card mt-5">
         <div class="card-body">
             @isset($consultor)
-                <form id="consultorForm" action="{{ route('consultores.update', $consultor) }}" method="POST">
+                <form id="consultorForm" action="{{ route('consultores.update', $consultor->id) }}" method="POST">
                 @method('PUT')
             @else
                 <form id="consultorForm" action="{{ route('consultores.store') }}" method="POST">
