@@ -59,9 +59,9 @@ class ConsultorController extends Controller
     {
         try {
             Consultor::create($request->validated());
-            return redirect('consultores.index')->with('success', 'Consultor criado com sucesso');
+            return redirect()->route('consultores.index')->with('success', 'Consultor criado com sucesso');
         } catch (Exception $e) {
-            return redirect('consultores.create')->withException($e)->withInput();
+            return redirect()->route('consultores.index')->withException($e)->withInput();
         }
     }
 
@@ -105,9 +105,9 @@ class ConsultorController extends Controller
     {
         try {
             Consultor::findOrFail($consultor)->updateOrFail($request->validated());
-            return redirect('consultores.index')->with('success', 'Consultor criado com sucesso');
+            return redirect()->route('consultores.index')->with('success', 'Consultor criado com sucesso');
         } catch (Exception $e) {
-            return redirect('consultores.create')->withException($e)->withInput();
+            return redirect()->route('consultores.create')->withException($e)->withInput();
         }
     }
 
@@ -123,9 +123,9 @@ class ConsultorController extends Controller
         try {
             //TODO: verificar vínculo compromisso
             Consultor::findOrFail($consultor)->deleteOrFail();
-            return redirect('consultores.index')->with('success', 'Consultor removido com sucesso');
+            return redirect()->route('consultores.index')->with('success', 'Consultor removido com sucesso');
         } catch (Exception $e) {
-            return redirect('consultores.index')->withException($e)->withInput();
+            return redirect()->route('consultores.index')->withException($e)->withInput();
         }
     }
 }
