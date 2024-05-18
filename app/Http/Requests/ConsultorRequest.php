@@ -28,7 +28,7 @@ class ConsultorRequest extends FormRequest
      */
     public function rules(): array
     {
-        $id_consultor = $this->route('consultor');
+        $id_consultor = $this->route('consultore');
 
         return [
             'nome' => [

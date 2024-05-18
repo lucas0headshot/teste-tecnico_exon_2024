@@ -107,7 +107,7 @@ class ConsultorController extends Controller
     {
         try {
             Consultor::findOrFail($id_consultor)->updateOrFail($request->validated());
-            return redirect()->route('consultores.index')->with('success', 'Consultor criado com sucesso');
+            return redirect()->route('consultores.index')->with('success', 'Consultor editado com sucesso');
         } catch (Exception $e) {
             return redirect()->route('consultores.create')->withException($e)->withInput();
         }
