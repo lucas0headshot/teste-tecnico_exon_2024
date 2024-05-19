@@ -86,6 +86,7 @@ class CompromissoController extends Controller
                 })
                 ->rawColumns(['acao'])
                 ->with([
+                    //*RN01 - Na visualização dos compromissos, o sistema deve possibilitar visualizar um totalizador geral. Sendo este a soma dos totais de horas e soma dos totais de valor, dos filtros informados.
                     'total_horas' => $total_horas,
                     'total_valor' => 'R$ ' . number_format($total_valor, 2, ',', '.')
                 ])

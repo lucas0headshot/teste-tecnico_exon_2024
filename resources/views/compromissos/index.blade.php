@@ -133,6 +133,7 @@
                     const api = this.api();
                     const json = api.ajax.json();
 
+                    //*RN01 - Na visualização dos compromissos, o sistema deve possibilitar visualizar um totalizador geral. Sendo este a soma dos totais de horas e soma dos totais de valor, dos filtros informados.
                     $('#compromissos-list tfoot td:eq(0)').html('Total');
                     $('#compromissos-list tfoot td:eq(1)').html(`${json.total_horas} - ${json.total_valor}`);
                 }
