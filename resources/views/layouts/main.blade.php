@@ -11,12 +11,12 @@
 
         @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     </head>
-    <body>
+    <body class="d-flex flex-column min-vh-100">
         <header>
             @include('layouts.header')
         </header>
 
-        <main class="container mt-3 mb-3">
+        <main class="container mt-3 mb-3 flex-grow-1">
             @yield('content')
         </main>
 
