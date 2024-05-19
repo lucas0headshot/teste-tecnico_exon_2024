@@ -120,7 +120,9 @@ class ConsultorController extends Controller
     public function update(ConsultorRequest $request, int $id_consultor): RedirectResponse
     {
         try {
-            Consultor::findOrFail($id_consultor)->updateOrFail($request->validated());
+            $consultor = Consultor::findOrFail($id_consultor);
+            $consultor->updateOrFail($request->validated());
+
             return redirect()->route('consultores.index')->with('success', 'Consultor editado com sucesso');
         } catch (Exception $e) {
             return redirect()->route('consultores.create')->withException($e)->withInput();

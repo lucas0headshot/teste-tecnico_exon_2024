@@ -37,7 +37,7 @@ class ConsultorRequest extends FormRequest
                 'max:255',
                 Rule::unique('consultores')->ignore($id_consultor)->withoutTrashed(),
             ],
-            'valor_hora' => 'required|numeric|min:0'
+            'valor_hora' => 'required|integer|min:0'
         ];
     }
 
@@ -55,7 +55,7 @@ class ConsultorRequest extends FormRequest
             'nome.unique' => 'Nome existente.',
             'valor_hora.required' => 'Informe o valor por hora.',
             'valor_hora.min' => 'Informe um valor válido.',
-            'valor_hora.numeric' => 'Informe um valor válido.'
+            'valor_hora.integer' => 'Informe um valor válido.'
         ];
     }
 }
