@@ -25,6 +25,7 @@ class CompromissoController extends Controller
     public function index(Request $request): View | JsonResponse
     {
         if ($request->ajax()) {
+            //*Ininicar query e adicionar filtros
             $query = Compromisso::with('consultor')->latest();
 
             if ($request->filled('data_inicio')) {
@@ -39,6 +40,7 @@ class CompromissoController extends Controller
 
             $data = $query->get();
 
+            //*Calcular toal horas
             $total_horas = $data->reduce(function ($carry, $item) {
                 return $carry + Compromisso::findOrFail($item->id)->calcularTotalHoras();
             }, 0);
@@ -47,10 +49,12 @@ class CompromissoController extends Controller
             $total_minutos_restantes = $total_horas % 60;
             $total_horas = sprintf('%02d:%02d', $total_horas_completas, $total_minutos_restantes);
 
+            //*Calcular valor total
             $total_valor = $data->reduce(function ($carry, $item) {
                 return $carry + Compromisso::findOrFail($item->id)->calcularValorTotal();
             }, 0);
 
+            //*Montar e retornar instância do DataTables
             return DataTables::of($data)
                 ->addColumn('data', function ($row) {
                     return Carbon::parse($row->data)->format('d/m/Y');
