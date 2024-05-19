@@ -55,7 +55,7 @@
         <section class="mt-4">
             <a class="btn btn-success" href="{{ route('consultores.create') }}">Cadastrar</a>
 
-            <table id="consultores-list" class="table table-bordered">
+            <table id="consultores-list" class="display w-100 responsive nowrap table table-bordered">
                 <thead>
                     <tr>
                         <th>Nome</th>
@@ -91,7 +91,7 @@
                 ],
 
                 responsive: true,
-                //FIXME: colReorder: true,
+                colReorder: true,
 
                 language: {
                     url: '/json/DataTables/pt-BR.json',

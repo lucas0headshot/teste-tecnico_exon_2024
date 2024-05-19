@@ -64,7 +64,7 @@
         <section class="mt-4">
             <a class="btn btn-success" href="{{ route('compromissos.create') }}">Cadastrar</a>
 
-            <table id="compromissos-list" class="table table-bordered">
+            <table id="compromissos-list" class="display w-100 responsive nowrap table table-bordered">
                 <thead>
                     <tr>
                         <th>Data</th>
@@ -80,7 +80,7 @@
                 <tfoot>
                     <tr>
                         <td>Total</td>
-                        <td><!-- //TODO: somar tudo --></td>
+                        <td><!-- Total aqui --></td>
                     </tr>
                 </tfoot>
             </table>
@@ -115,6 +115,7 @@
                 ],
 
                 responsive: true,
+                colReorder: true,
 
                 language: {
                     url: '/json/DataTables/pt-BR.json',
