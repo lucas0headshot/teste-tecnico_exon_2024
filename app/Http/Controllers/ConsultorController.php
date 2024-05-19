@@ -23,6 +23,7 @@ class ConsultorController extends Controller
     public function index(Request $request): View | JsonResponse
     {
         if ($request->ajax()) {
+            //*Iniciar query e adicionar filtros
             $query = Consultor::query();
 
             if ($request->filled('nome')) {
@@ -35,6 +36,7 @@ class ConsultorController extends Controller
 
             $data = $query->get();
 
+            //*Montar e retornar instância do DataTables
             return DataTables::of($data)
                 ->addColumn('valor_hora', function ($row) {
                     return 'R$ ' . number_format($row->valor_hora, 2, ',', '.');
@@ -141,6 +143,7 @@ class ConsultorController extends Controller
         try {
             $consultor = Consultor::findOrFail($id_consultor);
 
+            //*RN02 - Sistema deve permitir a exclusão de um consultor apenas se o mesmo não estiver vinculado a um compromisso.
             if ($consultor->hasCompromisso()) {
                 return redirect()->route('consultores.index')->with('error', 'Consultor possui compromisso, não pode ser removido.');
             }
