@@ -8,6 +8,7 @@ use App\Models\Compromisso;
 use App\Models\Consultor;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -130,9 +131,8 @@ class CompromissoController extends Controller
     public function show(int $id_compromisso): View
     {
         $compromisso = Compromisso::findOrFail($id_compromisso);
-        $consultores = Consultor::all();
 
-        return view('compromissos.show', ['compromisso' => $compromisso, 'consultores' => $consultores]);
+        return view('compromisso.show', ['compromisso' => $compromisso]);
     }
 
     /**
@@ -153,20 +153,23 @@ class CompromissoController extends Controller
     /**
      * Atualiza um compromisso.
      *
-     * @param ConsultorRequest $request
+     * @param CompromissoRequest $request
      * @param int $id_compromisso
      *
      * @return RedirectResponse
      */
-    public function update(ConsultorRequest $request, int $id_compromisso): RedirectResponse
+    public function update(CompromissoRequest $request, int $id_compromisso): RedirectResponse
     {
         try {
-            Compromisso::findOrFail($id_compromisso)->updateOrFail($request->validated());
+            $compromisso = Compromisso::findOrFail($id_compromisso);
+            $compromisso->updateOrFail($request->validated());
+
             return redirect()->route('compromissos.index')->with('success', 'Compromisso editado com sucesso');
         } catch (Exception $e) {
-            return redirect()->route('compromissos.edit')->with('erro', $e->getMessage())->withInput();
+            return redirect()->route('compromissos.edit', ['compromisso' => $id_compromisso])->with('erro', $e->getMessage())->withInput();
         }
     }
+
 
     /**
      * Remove um Compromisso.
