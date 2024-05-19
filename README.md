@@ -1,5 +1,7 @@
 # Teste Técnico [Exon](https://www.linkedin.com/company/exon-sistemas-e-consultoria/)
 
+[![Laravel Forge Site Deployment Status](https://img.shields.io/endpoint?url=https%3A%2F%2Fforge.laravel.com%2Fsite-badges%2F9915fec0-937d-41ca-a50e-dc86556f28ff%3Fdate%3D1&style=plastic)](https://forge.laravel.com/servers/790091/sites/2353022)
+
 ## 💡 Ideia
 
 Um sistema para gerenciar consultores e seus compromissos, permitindo operações CRUD (Create, Read, Update, Delete) para ambos.
