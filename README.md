@@ -1,66 +1,132 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Teste Técnico [Exon](https://www.linkedin.com/company/exon-sistemas-e-consultoria/)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## 💡 Ideia
 
-## About Laravel
+Um sistema para gerenciar consultores e seus compromissos, permitindo operações CRUD (Create, Read, Update, Delete) para ambos.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 💻 Funcionalidades
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Gerenciamento de Consultores
 
-## Learning Laravel
+- Cadastro
+- Listagem (com filtros por nome e valor da hora)
+- Edição
+- Exclusão (com restrições de negócio)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Gerenciamento de Compromissos dos Consultores
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- Cadastro
+- Listagem (com filtros por data de início, data fim e consultor)
+- Edição
+- Exclusão
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## 📋 Requisitos
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Funcionais
 
-### Premium Partners
+- **Consultores:**
+  - RF01 - Cadastro de consultor
+  - RF02 - Listagem de consultores (com filtros)
+  - RF03 - Edição de consultor
+  - RF04 - Exclusão de consultor
+- **Compromissos:**
+  - RF05 - Cadastro de compromisso
+  - RF06 - Listagem de compromissos (com filtros e totalizadores)
+  - RF07 - Edição de compromisso
+  - RF08 - Exclusão de compromisso
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### Não Funcionais
 
-## Contributing
+- RNF01 - Versionamento com Git
+- RNF02 - Deploy na nuvem
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Regras de Negócio
 
-## Code of Conduct
+- RN01 - Visualização de totalizador geral de compromissos
+- RN02 - Restrição para exclusão de consultor vinculado a compromissos
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## 🗃️ Modelagem dos Dados
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Consultores
 
-## License
+- ID (Inteiro, PK, Auto incrementável)
+- Nome completo (String, obrigatório)
+- Valor hora (Float)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Compromissos
+
+- ID (Inteiro, PK, Auto incrementável)
+- ID do Consultor (Inteiro, FK, obrigatório)
+- Data (Date, obrigatório)
+- Hora de início (Time, obrigatório)
+- Hora fim (Time, obrigatório)
+- Intervalo (Time, obrigatório)
+
+---
+
+## 🔧 Tecnologias Utilizadas
+
+- [Laravel 11](https://laravel.com/docs/11.x/installation)
+- [PostgreSQL](https://www.postgresql.org/) (Versão 16)
+- JavaScript (NodeJS)
+- **Vite**
+- Composer
+- PHP 8.3.7
+- NPM
+
+---
+
+## 🔍 Configuração do Ambiente
+
+1. **Clonar o repositório:**
+   ```bash
+   git clone https://github.com/lucas0headshot/teste-tecnico_exon_2024.git
+   ```
+
+2. **Instalar dependências do Composer:**
+   ```bash
+   composer install
+   ```
+
+3. **Instalar dependências do NPM (incluindo Vite):**
+   ```bash
+   npm install
+   ```
+
+4. **Copiar arquivo de configuração do ambiente e configurar:**
+   ```bash
+   cp .env.example .env
+   ```
+   Configure o arquivo `.env` com as informações do seu banco de dados.
+
+5. **Gerar a chave de aplicativo Laravel:**
+   ```bash
+   php artisan key:generate
+   ```
+
+6. **Executar as migrações do banco de dados:**
+   ```bash
+   php artisan migrate
+   ```
+
+## ▶️ Executando o Projeto
+
+Para iniciar o servidor embutido do Laravel e o servidor de desenvolvimento do Vite, utilize os seguintes comandos em duas janelas de terminal separadas:
+
+1. **Iniciar o servidor Laravel:**
+   ```bash
+   php artisan serve
+   ```
+
+2. **Iniciar o servidor Vite:**
+   ```bash
+   npm run dev
+   ```
+
+Acesse o projeto no seu navegador: [http://localhost:8000](http://localhost:8000/)
