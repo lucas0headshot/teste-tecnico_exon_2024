@@ -12,18 +12,19 @@
     <div class="card mt-5">
         <div class="card-body">
             @isset($compromisso)
-                <form id="compromissoForm" action="{{ route('compromissos.update', $compromisso) }}" method="POST">
+                <form id="compromissoFormPut" action="{{ route('compromissos.update', $compromisso->id) }}" method="POST">
+                @csrf
                 @method('PUT')
             @else
-                <form id="compromissoForm" action="{{ route('compromissos.store') }}" method="POST">
+                <form id="compromissoFormPost" action="{{ route('compromissos.store') }}" method="POST">
+                @csrf
             @endisset
-                    @csrf
                     <div class="form-group">
                         <label for="id_consultor" class="form-label">Consultor</label>
                         <select name="id_consultor" id="id_consultor" class="form-select" required>
                             <option value="0" {{ old('id_consultor') == 0 ? 'selected' : '' }} disabled>Selecione</option>
                             @foreach($consultores as $consultor)
-                                <option value="{{ $consultor->id }}" {{ old('id_consultor') == $consultor->id ? 'selected' : '' }}>{{ $consultor->nome }}</option>
+                                <option value="{{ $consultor->id }}" {{ $consultor->id === (isset($compromisso->consultor->id) ? $compromisso->consultor->id : 0) ? 'selected' : '' }}>{{ $consultor->nome }}</option>
                             @endforeach
                         </select>
                     </div>
