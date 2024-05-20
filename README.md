@@ -75,12 +75,12 @@ Um sistema para gerenciar consultores e seus compromissos, permitindo operaçõe
 ## 🔧 Tecnologias Utilizadas
 
 - [Laravel 11](https://laravel.com/docs/11.x/installation)
-- [PostgreSQL](https://www.postgresql.org/) (Versão 16)
-- JavaScript (NodeJS)
-- **Vite**
-- Composer
-- PHP 8.3.7
-- NPM
+- [PostgreSQL 16](https://www.postgresql.org/)
+- [JS (NodeJs)](https://nodejs.org/en)
+- [Vite](https://vitejs.dev/)
+- [Composer](https://getcomposer.org/)
+- [PHP 8.3.7](https://www.php.net/releases/8_3_7.php)
+- [NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 
 ---
 
@@ -96,7 +96,7 @@ Um sistema para gerenciar consultores e seus compromissos, permitindo operaçõe
    composer install
    ```
 
-3. **Instalar dependências do NPM (incluindo Vite):**
+3. **Instalar dependências do NPM:**
    ```bash
    npm install
    ```
