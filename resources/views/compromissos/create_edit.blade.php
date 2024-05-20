@@ -39,7 +39,7 @@
 
                     <div class="form-group mt-2">
                         <label for="hora_inicio" class="form-label">Hora de Início</label>
-                        <input type="time" class="form-control @error('hora_inicio') is-invalid @enderror" id="hora_inicio" name="hora_inicio" value="{{ old('hora_inicio', isset($compromisso) ? $compromisso->hora_inicio : '') }}" required>
+                        <input type="time" class="form-control @error('hora_inicio') is-invalid @enderror" id="hora_inicio" name="hora_inicio" value="{{ old('hora_inicio', isset($compromisso) ? substr($compromisso->hora_inicio, 0, 5) : '') }}" required>
                         @error('hora_inicio')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
@@ -47,7 +47,7 @@
 
                     <div class="form-group mt-2">
                         <label for="hora_fim" class="form-label">Hora de Fim</label>
-                        <input type="time" class="form-control @error('hora_fim') is-invalid @enderror" id="hora_fim" name="hora_fim" value="{{ old('hora_fim', isset($compromisso) ? $compromisso->hora_fim : '') }}" required>
+                        <input type="time" class="form-control @error('hora_fim') is-invalid @enderror" id="hora_fim" name="hora_fim" value="{{ old('hora_fim', isset($compromisso) ? substr($compromisso->hora_fim, 0, 5) : '') }}" required>
                         @error('hora_fim')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
@@ -55,7 +55,7 @@
 
                     <div class="form-group mt-2">
                         <label for="intervalo" class="form-label">Intervalo</label>
-                        <input type="time" class="form-control @error('intervalo') is-invalid @enderror" id="intervalo" name="intervalo" value="{{ old('intervalo', isset($compromisso) ? $compromisso->intervalo : '') }}" required>
+                        <input type="time" class="form-control @error('intervalo') is-invalid @enderror" id="intervalo" name="intervalo" value="{{ old('intervalo', isset($compromisso) ? substr($compromisso->intervalo, 0, 5) : '') }}" required>
                         @error('intervalo')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror

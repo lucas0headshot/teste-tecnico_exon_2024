@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\ValidInterval;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -37,7 +38,11 @@ class CompromissoRequest extends FormRequest
             'data' => 'required|date|date_format:Y-m-d',
             'hora_inicio' => 'required|date_format:H:i',
             'hora_fim' => 'required|after:hora_inicio|date_format:H:i',
-            'intervalo' => 'required|date_format:H:i',
+            'intervalo' => [
+                'required',
+                'date_format:H:i',
+                new ValidInterval($this->input('hora_inicio'), $this->input('hora_fim')) //*Issue #5 - https://github.com/lucas0headshot/teste-tecnico_exon_2024/issues/5
+            ],
         ];
     }
 
